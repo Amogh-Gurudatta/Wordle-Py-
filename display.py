@@ -20,6 +20,10 @@ GREEN = "#538D4E"
 BORDER = "#D3D6DA"
 FILLED_BORDER = "#878A8C"
 
+SECRET = wordle.get_random_word()
+
+game_result = ""
+
 KEYBOARD_LIST = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
 
 GUESSED_ALPHABET_FONT = pygame.font.Font("FreeSansBold.otf", 50)
@@ -33,6 +37,10 @@ ALPHABET_X_DISTANCE = 85
 ALPHABET_Y_DISTANCE = 12
 ALPHABET_SIZE = 75
 
+guess_count = 0
+guesses = [[] for _ in range(6)]
+current_guess = []
+current_guess_string = ""
 current_alphabet_bg_x = 110
 
 keyboard_indicator = []
@@ -44,7 +52,7 @@ class Letter:
         self.txt_colour = "#000000"
         self.bg_pos = bg_pos
         self.bg_x = bg_pos[0]
-        self.bg_y = bg_pos[0]
+        self.bg_y = bg_pos[1]
         self.bg_rect = (bg_pos[0], self.bg_y, ALPHABET_SIZE, ALPHABET_SIZE)
         self.txt = text
         self.txt_pos = (self.bg_x + 36, bg_pos[1] + 34)
@@ -57,10 +65,8 @@ class Letter:
         if self.bg_colour == "#FFFFFF":
             pygame.draw.rect(DISPLAY, FILLED_BORDER, self.bg_rect, 3)
 
-        self.text_surface = GUESSED_ALPHABET_FONT.render(
-            self.text, True, self.txt_colour
-        )
-        DISPLAY.blit(self.text_surface, self.txt_rect)
+        self.txt_surface = GUESSED_ALPHABET_FONT.render(self.txt, True, self.txt_colour)
+        DISPLAY.blit(self.txt_surface, self.txt_rect)
         pygame.display.update()
 
     def delete(self):
@@ -90,7 +96,19 @@ def reset():
 
 
 def create_new_letter():
-    pass
+    global current_guess_string, current_alphabet_bg_x
+
+    current_guess_string += key_pressed
+    new_letter = Letter(
+        key_pressed,
+        (current_alphabet_bg_x, guess_count * 100 + ALPHABET_Y_DISTANCE),
+    )
+    current_alphabet_bg_x += ALPHABET_X_DISTANCE
+    guesses[guess_count].append(new_letter)
+    current_guess.append(new_letter)
+    for guess in guesses:
+        for letter in guess:
+            letter.draw()
 
 
 def delete_letter():
@@ -102,3 +120,19 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
+                if game_result == "":
+                    reset()
+                else:
+                    if wordle.isValid(current_guess_string):
+                        check_guess(current_guess)
+            elif event.key == pygame.K_BACKSPACE:
+                if len(current_guess_string) > 0:
+                    delete_letter()
+            else:
+                key_pressed = event.unicode.upper()
+                if key_pressed in "QWERTYUIOPASDFGHJKLZXCVBNM" and key_pressed != "":
+                    if len(current_guess_string) < 5:
+                        create_new_letter()

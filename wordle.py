@@ -52,7 +52,7 @@ def isValid(word):
         word_list = set(word.strip().lower() for word in f)
 
     word = word.lower()  # All words are in lowercase
-    if word in word_list:
+    if len(word) == 5 and (word in word_list): # Ignore words that do not have exactly 5 letters and check if word is valid in the english language
         return True
     else:
         return False
@@ -61,18 +61,18 @@ def isValid(word):
 def main():
     print("Enter a 5 letter word: ")
     i = 0
-    while (i < 6):
-        word = input()
-        if len(word) != 5:  # Ignore words that do not have exactly 5 letters
-            print("Only 5-letter words are allowed.")
-            continue
-        if not isValid(word):  # Check if word is valid in the english language
-            print("Not in word list.")
-            continue
-        wordle(word)
-        i += 1
-    else:
-        print("The word was "+secret)
+    # while (i < 6):
+    #     word = input()
+    #     if len(word) != 5:  
+    #         print("Only 5-letter words are allowed.")
+    #         continue
+    #     if not isValid(word):  # 
+    #         print("Not in word list.")
+    #         continue
+    #     wordle(word)
+    #     i += 1
+    # else:
+    #     print("The word was "+secret)
 
 
 if __name__ == "__main__":
