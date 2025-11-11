@@ -1,4 +1,16 @@
-secret = "MORON"
+import random
+
+
+def get_random_word(filename):
+    with open(filename, 'r') as file:
+        # Read all text and split into words by whitespace
+        words = file.read().split()
+    # Return a random word from the list
+    return random.choice(words)
+
+# Example usage
+filename = "valid_wordle_words.txt"
+secret = get_random_word(filename).upper()
 
 
 def wordle(entry):
