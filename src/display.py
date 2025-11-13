@@ -1,7 +1,7 @@
 import pygame
 import sys
 from constants import *
-from wordle import (
+from src.logic import (
     guess_count,
     guesses,
     current_guess,

@@ -1,5 +1,6 @@
 import pygame
 import random
+from constants import GREY, YELLOW, GREEN, WORDS_FILE, STATS_FILE
 
 guess_count = 0
 guesses = [[] for _ in range(6)]
@@ -9,19 +10,32 @@ current_guess_string = ""
 game_result = ""
 
 
-def get_random_word(filename):
-    with open(filename, "r") as file:
-        # Read all text and split into words by whitespace
-        words = file.read().split()
-    # Return a random word from the list
-    return random.choice(words)
+def get_random_word():
+    try:
+        with open(WORDS_FILE, "r") as f:
+            # Read all text and split into words by whitespace
+            words = f.read().split()
+        if not words:
+            raise ValueError("Words file is empty.")
+        # Return a random word from the list
+        return set(words), random.choice(words)
+    except FileNotFoundError:
+        print(f"Error: '{WORDS_FILE}' not found. Please create it.")
+        exit()
+    except Exception as e:
+        print(f"Error loading words: {e}")
+        exit()
 
 
-SECRET = get_random_word("valid_wordle_words.txt")
+def load_stats():
+    pass
+
+
+def save_stats():
+    pass
 
 
 def check_guess(guess_to_check):
-    from display import GREY, YELLOW, GREEN, keyboard_indicators, current_alphabet_bg_x
 
     global current_guess, current_guess_string, guess_count, game_result
 

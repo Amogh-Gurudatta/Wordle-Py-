@@ -1,5 +1,6 @@
 import pygame
 import os
+from logic import get_random_word
 
 pygame.init()
 pygame.font.init()
@@ -7,8 +8,8 @@ pygame.font.init()
 # File Paths
 ASSET_PATH = "assets"
 DATA_PATH = "data"
-WORDS_FILE = "words.txt"
-STATS_FILE = "stats.json"
+WORDS_FILE = os.path.join(DATA_PATH, "words.txt")
+STATS_FILE = os.path.join(DATA_PATH, "stats.json")
 
 # Dimensions
 WIDTH, HEIGHT = 633, 900
@@ -23,7 +24,9 @@ try:
     ICON = pygame.image.load(os.path.join(ASSET_PATH, "Icon.svg"))
 except pygame.error as e:
     print(f"Error loading assets: {e}")
-    print("Please make sure the 'assets' folder is in the same directory and contains 'Starting Tiles.png' and 'Icon.svg'")
+    print(
+        "Please make sure the 'assets' folder is in the same directory and contains 'Starting Tiles.png' and 'Icon.svg'"
+    )
     pygame.quit()
     exit()
 
@@ -60,3 +63,5 @@ VALID_KEYS = "QWERTYUIOPASDFGHJKLZXCVBNM"
 DISPLAY.fill("#FFFFFF")
 DISPLAY.blit(BACKGROUND, BG_RECT)
 pygame.display.update()
+
+SECRET = get_random_word("valid_wordle_words.txt")
