@@ -1,6 +1,6 @@
 import pygame
 import os
-from logic import get_random_word
+import random
 
 pygame.init()
 pygame.font.init()
@@ -14,8 +14,8 @@ STATS_FILE = os.path.join(DATA_PATH, "stats.json")
 # Dimensions
 WIDTH, HEIGHT = 633, 900
 LETTER_SIZE = 75
-LETTER_X_SPACING = 85
-LETTER_Y_SPACING = 12
+ALPHABET_X_DISTANCE = 85
+ALPHABET_Y_DISTANCE = 12
 
 # Screen & Icon
 DISPLAY = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -64,4 +64,20 @@ DISPLAY.fill("#FFFFFF")
 DISPLAY.blit(BACKGROUND, BG_RECT)
 pygame.display.update()
 
-SECRET = get_random_word("valid_wordle_words.txt")
+def get_word():
+    try:
+        with open(WORDS_FILE, "r") as f:
+            # Read all text and split into words by whitespace
+            words = f.read().split()
+        if not words:
+            raise ValueError("Words file is empty.")
+        # Return a random word from the list
+        return set(words), random.choice(words)
+    except FileNotFoundError:
+        print(f"Error: '{WORDS_FILE}' not found. Please create it.")
+        exit()
+    except Exception as e:
+        print(f"Error loading words: {e}")
+        exit()
+        
+WORDS, SECRET = get_word()
