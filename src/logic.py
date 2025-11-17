@@ -1,6 +1,5 @@
 import pygame
-import random
-from constants import GREY, YELLOW, GREEN, WORDS_FILE, STATS_FILE
+from constants import GREY, YELLOW, GREEN, WORDS_FILE, STATS_FILE, SECRET
 
 guess_count = 0
 guesses = [[] for _ in range(6)]
@@ -10,21 +9,21 @@ current_guess_string = ""
 game_result = ""
 
 
-def get_random_word():
-    try:
-        with open(WORDS_FILE, "r") as f:
-            # Read all text and split into words by whitespace
-            words = f.read().split()
-        if not words:
-            raise ValueError("Words file is empty.")
-        # Return a random word from the list
-        return set(words), random.choice(words)
-    except FileNotFoundError:
-        print(f"Error: '{WORDS_FILE}' not found. Please create it.")
-        exit()
-    except Exception as e:
-        print(f"Error loading words: {e}")
-        exit()
+# def get_word():
+#     try:
+#         with open(WORDS_FILE, "r") as f:
+#             # Read all text and split into words by whitespace
+#             words = f.read().split()
+#         if not words:
+#             raise ValueError("Words file is empty.")
+#         # Return a random word from the list
+#         return set(words), random.choice(words)
+#     except FileNotFoundError:
+#         print(f"Error: '{WORDS_FILE}' not found. Please create it.")
+#         exit()
+#     except Exception as e:
+#         print(f"Error loading words: {e}")
+#         exit()
 
 
 def load_stats():
@@ -141,8 +140,8 @@ def isValid(word):
         return False
 
 
-def main():
-    print("Enter a 5 letter word: ")
+# def main():
+#     print("Enter a 5 letter word: ")
     i = 0
     # while (i < 6):
     #     word = input()
@@ -158,5 +157,5 @@ def main():
     #     print("The word was "+secret)
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
