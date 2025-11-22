@@ -17,6 +17,8 @@ stats = logic.load_stats()
 display.init_screen()
 indicators = display.init_indicators()
 
+WORDS, SECRET = logic.get_word()
+
 
 def add_letter_to_guess(key_pressed):
     """Adds new a new letter to the current guess."""
@@ -54,7 +56,7 @@ def evaluate_guess():
     if len(current_guess_str) != 5 or current_guess_str not in WORDS:
         return
 
-    tile_colours, key_colours = logic.check_guess(current_guess_str)
+    tile_colours, key_colours = logic.check_guess(current_guess_str, SECRET)
 
     display.update_guess_colours(current_guess, tile_colours)
     display.update_keyboard(indicators, key_colours)
@@ -64,7 +66,7 @@ def evaluate_guess():
     if current_guess_str == SECRET:
         game_result = "W"
     elif guess_count == 6:
-        game_result = "l"
+        game_result = "L"
 
     if game_result:
         stats = logic.update_stats(stats, game_result, guess_count)
