@@ -1,5 +1,6 @@
 import pygame
-from constants import GREY, YELLOW, GREEN, WORDS_FILE, STATS_FILE, SECRET
+import random
+from constants import GREY, YELLOW, GREEN, WORDS_FILE, STATS_FILE
 
 guess_count = 0
 guesses = [[] for _ in range(6)]
@@ -8,22 +9,21 @@ current_guess_string = ""
 
 game_result = ""
 
-
-# def get_word():
-#     try:
-#         with open(WORDS_FILE, "r") as f:
-#             # Read all text and split into words by whitespace
-#             words = f.read().split()
-#         if not words:
-#             raise ValueError("Words file is empty.")
-#         # Return a random word from the list
-#         return set(words), random.choice(words)
-#     except FileNotFoundError:
-#         print(f"Error: '{WORDS_FILE}' not found. Please create it.")
-#         exit()
-#     except Exception as e:
-#         print(f"Error loading words: {e}")
-#         exit()
+def get_word():
+    try:
+        with open(WORDS_FILE, "r") as f:
+            # Read all text and split into words by whitespace
+            words = f.read().split()
+        if not words:
+            raise ValueError("Words file is empty.")
+        # Return a random word from the list
+        return set(words), random.choice(words)
+    except FileNotFoundError:
+        print(f"Error: '{WORDS_FILE}' not found. Please create it.")
+        exit()
+    except Exception as e:
+        print(f"Error loading words: {e}")
+        exit()
 
 
 def load_stats():
@@ -34,7 +34,7 @@ def save_stats():
     pass
 
 
-def check_guess(guess_to_check):
+def check_guess(guess_to_check, SECRET):
 
     global current_guess, current_guess_string, guess_count, game_result
 
@@ -118,7 +118,7 @@ def check_guess(guess_to_check):
     #         common.remove(newList[i])  # Remove once printed
 
     #     else:
-    #         print(newList[i], end=" ")  # Prints in no color
+    #         print(newList[i], end=" ")  # Prints in no colour
 
     print()
 

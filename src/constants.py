@@ -18,23 +18,23 @@ ALPHABET_X_DISTANCE = 85
 ALPHABET_Y_DISTANCE = 12
 
 # Screen & Icon
-DISPLAY = pygame.display.set_mode((WIDTH, HEIGHT))
-try:
-    BACKGROUND = pygame.image.load(os.path.join(ASSET_PATH, "Starting Tiles.png"))
-    ICON = pygame.image.load(os.path.join(ASSET_PATH, "Icon.svg"))
-except pygame.error as e:
-    print(f"Error loading assets: {e}")
-    print(
-        "Please make sure the 'assets' folder is in the same directory and contains 'Starting Tiles.png' and 'Icon.svg'"
-    )
-    pygame.quit()
-    exit()
+# DISPLAY = pygame.display.set_mode((WIDTH, HEIGHT))
+# try:
+#     BACKGROUND = pygame.image.load(os.path.join(ASSET_PATH, "Starting Tiles.png"))
+#     ICON = pygame.image.load(os.path.join(ASSET_PATH, "Icon.svg"))
+# except pygame.error as e:
+#     print(f"Error loading assets: {e}")
+#     print(
+#         "Please make sure the 'assets' folder is in the same directory and contains 'Starting Tiles.png' and 'Icon.svg'"
+#     )
+#     pygame.quit()
+#     exit()
 
-BG_RECT = BACKGROUND.get_rect(center=(317, 300))
-pygame.display.set_caption("Wordle!")
-pygame.display.set_icon(ICON)
+# BG_RECT = BACKGROUND.get_rect(center=(317, 300))
+# pygame.display.set_caption("Wordle!")
+# pygame.display.set_icon(ICON)
 
-# --- Colors ---
+# --- Colours ---
 GREY = "#3A3A3C"
 YELLOW = "#B59F3B"
 GREEN = "#538D4E"
@@ -60,24 +60,24 @@ except FileNotFoundError:
 ALPHABET = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
 VALID_KEYS = "QWERTYUIOPASDFGHJKLZXCVBNM"
 
-DISPLAY.fill("#FFFFFF")
-DISPLAY.blit(BACKGROUND, BG_RECT)
-pygame.display.update()
+# DISPLAY.fill("#FFFFFF")
+# DISPLAY.blit(BACKGROUND, BG_RECT)
+# pygame.display.update()
 
-def get_word():
-    try:
-        with open(WORDS_FILE, "r") as f:
-            # Read all text and split into words by whitespace
-            words = f.read().split()
-        if not words:
-            raise ValueError("Words file is empty.")
-        # Return a random word from the list
-        return set(words), random.choice(words)
-    except FileNotFoundError:
-        print(f"Error: '{WORDS_FILE}' not found. Please create it.")
-        exit()
-    except Exception as e:
-        print(f"Error loading words: {e}")
-        exit()
+# def get_word():
+#     try:
+#         with open(WORDS_FILE, "r") as f:
+#             # Read all text and split into words by whitespace
+#             words = f.read().split()
+#         if not words:
+#             raise ValueError("Words file is empty.")
+#         # Return a random word from the list
+#         return set(words), random.choice(words)
+#     except FileNotFoundError:
+#         print(f"Error: '{WORDS_FILE}' not found. Please create it.")
+#         exit()
+#     except Exception as e:
+#         print(f"Error loading words: {e}")
+#         exit()
         
-WORDS, SECRET = get_word()
+# WORDS, SECRET = get_word()
