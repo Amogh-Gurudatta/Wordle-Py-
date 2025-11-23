@@ -1,9 +1,17 @@
+import ctypes
 import pygame
 import sys
 from constants import *
 from game_objects import Letter
 import logic
 import display
+
+try:
+    import ctypes
+
+    ctypes.windll.user32.SetProcessDPIAware()
+except AttributeError:
+    pass
 
 guess_count = 0
 guesses = [[] for _ in range(6)]
