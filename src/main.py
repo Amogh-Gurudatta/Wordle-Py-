@@ -12,6 +12,7 @@ current_guess_str = ""
 current_alphabet_bg_x = 110
 game_result = ""
 
+clock = pygame.time.Clock()
 stats = logic.load_stats()
 display.init_screen()
 indicators = display.init_indicators()
@@ -37,6 +38,7 @@ def add_letter_to_guess(key_pressed):
         #         letter.draw()
         new_letter.draw()
 
+
 def remove_letter_from_guess():
     """Deletes the last letter from the current guess"""
     global current_guess_str, current_alphabet_bg_x
@@ -47,6 +49,7 @@ def remove_letter_from_guess():
         current_guess_str = current_guess_str[:-1]
         current_alphabet_bg_x -= ALPHABET_X_DISTANCE
         letter.delete()
+
 
 def evaluate_guess():
     """Checks the guess and updates screen if valid"""
@@ -89,6 +92,7 @@ def reset():
     _, SECRET = logic.get_word()
     display.reset_display(indicators)
 
+
 while True:
     if game_result != "":
         display.draw_play_again(stats, SECRET)
@@ -108,8 +112,11 @@ while True:
             elif event.key == pygame.K_BACKSPACE:
                 if game_result == "":
                     remove_letter_from_guess()
-                    
+
             elif game_result == "":
                 key_pressed = event.unicode.upper()
-                if key_pressed in VALID_KEYS:
+                if key_pressed in VALID_KEYS and key_pressed != "":
                     add_letter_to_guess(key_pressed)
+
+    pygame.display.update()
+    clock.tick(60)
