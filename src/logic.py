@@ -137,7 +137,7 @@ def check_guess(guess_string, correct_word):
 def isValid(word):
     """
     This function checks whether the user input is a valid english word.
-    The text file "valid_wordle_words.txt" must be present in the same directory as the script.
+    The text file "words.txt" must be present in the same directory as the script.
     """
     with open("valid_wordle_words.txt") as f:  # Creates a set of all valid words
         word_list = set(word.strip().lower() for word in f)
@@ -170,6 +170,7 @@ def isValid(word):
 
 # if __name__ == "__main__":
 #     main()
+
 
 
 
