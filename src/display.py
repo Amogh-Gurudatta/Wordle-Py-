@@ -1,5 +1,4 @@
 import pygame
-import sys
 from constants import *
 
 DISPLAY = pygame.display.set_mode((WIDTH, HEIGHT))

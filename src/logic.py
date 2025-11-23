@@ -1,4 +1,3 @@
-import pygame
 import random
 from constants import GREY, YELLOW, GREEN, WORDS_FILE, STATS_FILE
 import json
@@ -93,7 +92,8 @@ def check_guess(guess_string, correct_word):
             if key_colors.get(letter) not in (GREEN, YELLOW): # Don't downgrade
                 key_colors[letter] = GREY
                 
-        return tile_colors, key_colors
+    return tile_colors, key_colors
+
     # word = entry.upper()
     # ogList = list(secret)
     # newList = list(word)
@@ -134,21 +134,21 @@ def check_guess(guess_string, correct_word):
     # print()
 
 
-def isValid(word):
-    """
-    This function checks whether the user input is a valid english word.
-    The text file "words.txt" must be present in the same directory as the script.
-    """
-    with open("valid_wordle_words.txt") as f:  # Creates a set of all valid words
-        word_list = set(word.strip().lower() for word in f)
+# def isValid(word):
+#     """
+#     This function checks whether the user input is a valid english word.
+#     The text file "words.txt" must be present in the same directory as the script.
+#     """
+#     with open("valid_wordle_words.txt") as f:  # Creates a set of all valid words
+#         word_list = set(word.strip().lower() for word in f)
 
-    word = word.lower()  # All words are in lowercase
-    if len(word) == 5 and (
-        word in word_list
-    ):  # Ignore words that do not have exactly 5 letters and check if word is valid in the english language
-        return True
-    else:
-        return False
+#     word = word.lower()  # All words are in lowercase
+#     if len(word) == 5 and (
+#         word in word_list
+#     ):  # Ignore words that do not have exactly 5 letters and check if word is valid in the english language
+#         return True
+#     else:
+#         return False
 
 
 # def main():

@@ -1,6 +1,5 @@
 import pygame
 import sys
-import random
 from constants import *
 from game_objects import Letter
 import logic
