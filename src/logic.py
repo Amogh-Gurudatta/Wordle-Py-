@@ -68,7 +68,7 @@ def update_stats(stats, game_result, guess_count):
     return stats # Return the updated stats
 
 
-def check_word(guess_string, correct_word):
+def check_guess(guess_string, correct_word):
     """
     Checks a guess against the correct word.
     Returns:
@@ -170,5 +170,6 @@ def isValid(word):
 
 # if __name__ == "__main__":
 #     main()
+
 
 
