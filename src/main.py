@@ -55,7 +55,12 @@ def evaluate_guess():
     """Checks the guess and updates screen if valid"""
     global guess_count, game_result, stats, current_alphabet_bg_x, current_guess_str, current_guess
 
-    if len(current_guess_str) != 5 or current_guess_str not in WORDS:
+    if len(current_guess_str) != 5:
+        print("Word must be 5 letters long!")  # Debug feedback
+        return
+
+    if current_guess_str not in WORDS:
+        print(f"'{current_guess_str}' is not in the word list!")  # Debug feedback
         return
 
     tile_colours, key_colours = logic.check_guess(current_guess_str, SECRET)

@@ -13,7 +13,7 @@ def get_word():
     try:
         with open(WORDS_FILE, "r") as f:
             # Read all text and split into words by whitespace
-            words = f.read().split()
+            words = [word.strip().upper() for word in f.read().split()]
         if not words:
             raise ValueError("Words file is empty.")
         # Return a random word from the list
@@ -74,21 +74,32 @@ def check_guess(guess_string, correct_word):
         - A list of colors for the guess tiles (e.g., [GREEN, YELLOW, GREY]).
         - A dictionary of colors for the keyboard (e.g., {'A': GREEN}).
     """
-    tile_colors = []
+    tile_colors = [GREY] * 5
     key_colors = {}
+
+    correct_word_list = list(correct_word)
+    guess_list = list(guess_string)
     
     for i in range(5):
-        letter = guess_string[i]
+        letter = guess_list[i]
         
-        if letter == correct_word[i]:
-            tile_colors.append(GREEN)
+        if letter == correct_word_list[i]:
+            tile_colors[i] = GREEN
             key_colors[letter] = GREEN
-        elif letter in correct_word:
-            tile_colors.append(YELLOW)
+            correct_word_list[i] = None
+
+    for i in range(5):
+        letter = guess_list[i]
+
+        if tile_colors[i] == GREEN:
+            continue
+
+        if letter in correct_word_list:
+            tile_colors[i] = YELLOW
             if key_colors.get(letter) != GREEN: # Don't downgrade Green
                 key_colors[letter] = YELLOW
+            correct_word_list[correct_word_list.index(letter)] = None
         else:
-            tile_colors.append(GREY)
             if key_colors.get(letter) not in (GREEN, YELLOW): # Don't downgrade
                 key_colors[letter] = GREY
                 
