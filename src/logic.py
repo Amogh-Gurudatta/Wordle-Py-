@@ -68,55 +68,32 @@ def update_stats(stats, game_result, guess_count):
     return stats # Return the updated stats
 
 
-def check_guess(guess_to_check, SECRET):
-
-    global current_guess, current_guess_string, guess_count, game_result
-
-    game_decided = False
+def check_word(guess_string, correct_word):
+    """
+    Checks a guess against the correct word.
+    Returns:
+        - A list of colors for the guess tiles (e.g., [GREEN, YELLOW, GREY]).
+        - A dictionary of colors for the keyboard (e.g., {'A': GREEN}).
+    """
+    tile_colors = []
+    key_colors = {}
+    
     for i in range(5):
-        lower_letter = guess_to_check[i].text.lower()
-        if lower_letter in SECRET:
-            if lower_letter == SECRET[i]:
-                guess_to_check[i].bg_colour = GREEN
-                # for indicator in keyboard_indicators:
-                #     if indicator.text == lower_letter.upper():
-                #         indicator.bg_colour = GREEN
-                #         indicator.draw()
-                guess_to_check[i].txt_colour = "#FFFFFF"
-                if not game_decided:
-                    game_result = "W"
-
-            else:
-                guess_to_check[i].bg_colour = YELLOW
-                # for indicator in keyboard_indicators:
-                #     if indicator.text == lower_letter.upper():
-                #         indicator.bg_colour = YELLOW
-                #         indicator.draw()
-                guess_to_check[i].txt_colour = "#FFFFFF"
-                game_result = ""
-                game_decided = True
-
+        letter = guess_string[i]
+        
+        if letter == correct_word[i]:
+            tile_colors.append(GREEN)
+            key_colors[letter] = GREEN
+        elif letter in correct_word:
+            tile_colors.append(YELLOW)
+            if key_colors.get(letter) != GREEN: # Don't downgrade Green
+                key_colors[letter] = YELLOW
         else:
-            guess_to_check[i].bg_colour = GREY
-            # for indicator in keyboard_indicators:
-            #     if indicator.text == lower_letter.upper():
-            #         indicator.bg_colour = GREY
-            #         indicator.draw()
-            guess_to_check[i].txt_colour = "#FFFFFF"
-            game_result = ""
-            game_decided = True
-
-        guess_to_check[i].draw()
-        pygame.display.update()
-
-    guess_count += 1
-    current_guess = []
-    current_guess_string = ""
-    current_alphabet_bg_x = 110
-
-    if guess_count == 6 and game_result == "":
-        game_result = "L"
-
+            tile_colors.append(GREY)
+            if key_colors.get(letter) not in (GREEN, YELLOW): # Don't downgrade
+                key_colors[letter] = GREY
+                
+        return tile_colors, key_colors
     # word = entry.upper()
     # ogList = list(secret)
     # newList = list(word)
@@ -154,7 +131,7 @@ def check_guess(guess_to_check, SECRET):
     #     else:
     #         print(newList[i], end=" ")  # Prints in no colour
 
-    print()
+    # print()
 
 
 def isValid(word):
@@ -176,7 +153,7 @@ def isValid(word):
 
 # def main():
 #     print("Enter a 5 letter word: ")
-    i = 0
+    # i = 0
     # while (i < 6):
     #     word = input()
     #     if len(word) != 5:
@@ -193,4 +170,5 @@ def isValid(word):
 
 # if __name__ == "__main__":
 #     main()
+
 
