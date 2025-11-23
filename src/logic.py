@@ -71,11 +71,11 @@ def check_guess(guess_string, correct_word):
     """
     Checks a guess against the correct word.
     Returns:
-        - A list of colors for the guess tiles (e.g., [GREEN, YELLOW, GREY]).
-        - A dictionary of colors for the keyboard (e.g., {'A': GREEN}).
+        - A list of colours for the guess tiles (e.g., [GREEN, YELLOW, GREY]).
+        - A dictionary of colours for the keyboard (e.g., {'A': GREEN}).
     """
-    tile_colors = [GREY] * 5
-    key_colors = {}
+    tile_colours = [GREY] * 5
+    key_colours = {}
 
     correct_word_list = list(correct_word)
     guess_list = list(guess_string)
@@ -84,26 +84,26 @@ def check_guess(guess_string, correct_word):
         letter = guess_list[i]
         
         if letter == correct_word_list[i]:
-            tile_colors[i] = GREEN
-            key_colors[letter] = GREEN
+            tile_colours[i] = GREEN
+            key_colours[letter] = GREEN
             correct_word_list[i] = None
 
     for i in range(5):
         letter = guess_list[i]
 
-        if tile_colors[i] == GREEN:
+        if tile_colours[i] == GREEN:
             continue
 
         if letter in correct_word_list:
-            tile_colors[i] = YELLOW
-            if key_colors.get(letter) != GREEN: # Don't downgrade Green
-                key_colors[letter] = YELLOW
+            tile_colours[i] = YELLOW
+            if key_colours.get(letter) != GREEN: # Don't downgrade Green
+                key_colours[letter] = YELLOW
             correct_word_list[correct_word_list.index(letter)] = None
         else:
-            if key_colors.get(letter) not in (GREEN, YELLOW): # Don't downgrade
-                key_colors[letter] = GREY
+            if key_colours.get(letter) not in (GREEN, YELLOW): # Don't downgrade
+                key_colours[letter] = GREY
                 
-    return tile_colors, key_colors
+    return tile_colours, key_colours
 
     # word = entry.upper()
     # ogList = list(secret)
