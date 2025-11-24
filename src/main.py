@@ -25,7 +25,7 @@ stats = logic.load_stats()
 display.init_screen()
 indicators = display.init_indicators()
 
-WORDS, SECRET = logic.get_word()
+GUESSABLE_WORDS, SECRET = logic.get_guessable_words()
 
 
 def add_letter_to_guess(key_pressed):
@@ -67,7 +67,7 @@ def evaluate_guess():
         print("Word must be 5 letters long!")  # Debug feedback
         return
 
-    if current_guess_str not in WORDS:
+    if current_guess_str not in GUESSABLE_WORDS:
         print(f"'{current_guess_str}' is not in the word list!")  # Debug feedback
         return
 
@@ -93,7 +93,7 @@ def evaluate_guess():
 
 def reset():
     """Resets the game."""
-    global guess_count, guesses, current_guess, current_guess_str, current_alphabet_bg_x, game_result, SECRET, WORDS
+    global guess_count, guesses, current_guess, current_guess_str, current_alphabet_bg_x, game_result, SECRET
 
     guess_count = 0
     guesses = [[] for _ in range(6)]
@@ -102,7 +102,7 @@ def reset():
     current_alphabet_bg_x = 110
     game_result = ""
 
-    _, SECRET = logic.get_word()
+    _, SECRET = logic.get_random_word()
     display.reset_display(indicators)
 
 

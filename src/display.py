@@ -91,15 +91,23 @@ def draw_play_again(stats, SECRET):
     DISPLAY.blit(max_streak_text, (WIDTH / 2 + 50, 700))
 
     dist_title = STATS_FONT.render("Guess Distribution:", True, BLACK)
-    DISPLAY.blit(dist_title, (WIDTH / 2 - 100, 740))
+    dist_rect = dist_title.get_rect(center=(WIDTH / 2, 750))
+    DISPLAY.blit(dist_title, dist_rect)
+
+    total_width_estimate = 500
+    start_x = (WIDTH - total_width_estimate) / 2
+    spacing = 85
+
     for i in range(1, 7):
+        # Render string like "1: 0" or "2: 5"
         dist_text = STATS_FONT.render(
             f"{i}: {stats['guess_distribution'][str(i)]}", True, GREY
         )
-        DISPLAY.blit(dist_text, (WIDTH / 2 - 10, 740 + i * 25))
+        # Place them side by side
+        DISPLAY.blit(dist_text, (start_x + (i - 1) * spacing, 780))
 
     play_again_text = PLAY_AGAIN_FONT.render("Press ENTER to Play Again!", True, BLACK)
-    play_again_rect = play_again_text.get_rect(center=(WIDTH / 2, 885))
+    play_again_rect = play_again_text.get_rect(center=(WIDTH / 2, 840))
     DISPLAY.blit(play_again_text, play_again_rect)
 
     pygame.display.update()
