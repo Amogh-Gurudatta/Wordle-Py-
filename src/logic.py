@@ -1,6 +1,12 @@
-import pygame
 import random
-from constants import GREY, YELLOW, GREEN, WORDS_FILE, STATS_FILE
+from constants import (
+    GREY,
+    YELLOW,
+    GREEN,
+    CHOOSABLE_WORDS_FILE,
+    GUESSABLE_WORDS_FILE,
+    STATS_FILE,
+)
 import json
 
 guess_count = 0
@@ -10,17 +16,35 @@ current_guess_string = ""
 
 game_result = ""
 
-def get_word():
+
+def get_random_word():
     try:
-        with open(WORDS_FILE, "r") as f:
+        with open(CHOOSABLE_WORDS_FILE, "r") as f:
             # Read all text and split into words by whitespace
-            words = f.read().split()
+            words = [word.strip().upper() for word in f.read().split()]
         if not words:
             raise ValueError("Words file is empty.")
         # Return a random word from the list
         return set(words), random.choice(words)
     except FileNotFoundError:
-        print(f"Error: '{WORDS_FILE}' not found. Please create it.")
+        print(f"Error: '{CHOOSABLE_WORDS_FILE}' not found. Please create it.")
+        exit()
+    except Exception as e:
+        print(f"Error loading words: {e}")
+        exit()
+
+
+def get_guessable_words():
+    try:
+        with open(GUESSABLE_WORDS_FILE, "r") as f:
+            # Read all text and split into words by whitespace
+            words = [word.strip().upper() for word in f.read().split()]
+        if not words:
+            raise ValueError("Words file is empty.")
+        # Return a random word from the list
+        return set(words), random.choice(words)
+    except FileNotFoundError:
+        print(f"Error: '{GUESSABLE_WORDS_FILE}' not found. Please create it.")
         exit()
     except Exception as e:
         print(f"Error loading words: {e}")
@@ -34,23 +58,25 @@ def load_stats():
         "losses": 0,
         "current_streak": 0,
         "max_streak": 0,
-        "guess_distribution": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0}
+        "guess_distribution": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0},
     }
     try:
-        with open(STATS_FILE, 'r') as f:
+        with open(STATS_FILE, "r") as f:
             stats = json.load(f)
             stats.update({k: v for k, v in default_stats.items() if k not in stats})
             return stats
     except (FileNotFoundError, json.JSONDecodeError):
         return default_stats
 
+
 def save_stats(stats):
     """Saves the game statistics to the JSON file."""
     try:
-        with open(STATS_FILE, 'w') as f:
+        with open(STATS_FILE, "w") as f:
             json.dump(stats, f, indent=4)
     except IOError as e:
         print(f"Error saving stats: {e}")
+
 
 def update_stats(stats, game_result, guess_count):
     """Updates the stats dictionary based on the game result."""
@@ -63,37 +89,49 @@ def update_stats(stats, game_result, guess_count):
     elif game_result == "L":
         stats["losses"] += 1
         stats["current_streak"] = 0
-    
+
     save_stats(stats)
-    return stats # Return the updated stats
+    return stats  # Return the updated stats
 
 
 def check_guess(guess_string, correct_word):
     """
     Checks a guess against the correct word.
     Returns:
-        - A list of colors for the guess tiles (e.g., [GREEN, YELLOW, GREY]).
-        - A dictionary of colors for the keyboard (e.g., {'A': GREEN}).
+        - A list of colours for the guess tiles (e.g., [GREEN, YELLOW, GREY]).
+        - A dictionary of colours for the keyboard (e.g., {'A': GREEN}).
     """
-    tile_colors = []
-    key_colors = {}
-    
+    tile_colours = [GREY] * 5
+    key_colours = {}
+
+    correct_word_list = list(correct_word)
+    guess_list = list(guess_string)
+
     for i in range(5):
-        letter = guess_string[i]
-        
-        if letter == correct_word[i]:
-            tile_colors.append(GREEN)
-            key_colors[letter] = GREEN
-        elif letter in correct_word:
-            tile_colors.append(YELLOW)
-            if key_colors.get(letter) != GREEN: # Don't downgrade Green
-                key_colors[letter] = YELLOW
+        letter = guess_list[i]
+
+        if letter == correct_word_list[i]:
+            tile_colours[i] = GREEN
+            key_colours[letter] = GREEN
+            correct_word_list[i] = None
+
+    for i in range(5):
+        letter = guess_list[i]
+
+        if tile_colours[i] == GREEN:
+            continue
+
+        if letter in correct_word_list:
+            tile_colours[i] = YELLOW
+            if key_colours.get(letter) != GREEN:  # Don't downgrade Green
+                key_colours[letter] = YELLOW
+            correct_word_list[correct_word_list.index(letter)] = None
         else:
-            tile_colors.append(GREY)
-            if key_colors.get(letter) not in (GREEN, YELLOW): # Don't downgrade
-                key_colors[letter] = GREY
-                
-        return tile_colors, key_colors
+            if key_colours.get(letter) not in (GREEN, YELLOW):  # Don't downgrade
+                key_colours[letter] = GREY
+
+    return tile_colours, key_colours
+
     # word = entry.upper()
     # ogList = list(secret)
     # newList = list(word)
@@ -134,43 +172,39 @@ def check_guess(guess_string, correct_word):
     # print()
 
 
-def isValid(word):
-    """
-    This function checks whether the user input is a valid english word.
-    The text file "words.txt" must be present in the same directory as the script.
-    """
-    with open("valid_wordle_words.txt") as f:  # Creates a set of all valid words
-        word_list = set(word.strip().lower() for word in f)
+# def isValid(word):
+#     """
+#     This function checks whether the user input is a valid english word.
+#     The text file "words.txt" must be present in the same directory as the script.
+#     """
+#     with open("valid_wordle_words.txt") as f:  # Creates a set of all valid words
+#         word_list = set(word.strip().lower() for word in f)
 
-    word = word.lower()  # All words are in lowercase
-    if len(word) == 5 and (
-        word in word_list
-    ):  # Ignore words that do not have exactly 5 letters and check if word is valid in the english language
-        return True
-    else:
-        return False
+#     word = word.lower()  # All words are in lowercase
+#     if len(word) == 5 and (
+#         word in word_list
+#     ):  # Ignore words that do not have exactly 5 letters and check if word is valid in the english language
+#         return True
+#     else:
+#         return False
 
 
 # def main():
 #     print("Enter a 5 letter word: ")
-    # i = 0
-    # while (i < 6):
-    #     word = input()
-    #     if len(word) != 5:
-    #         print("Only 5-letter words are allowed.")
-    #         continue
-    #     if not isValid(word):  #
-    #         print("Not in word list.")
-    #         continue
-    #     wordle(word)
-    #     i += 1
-    # else:
-    #     print("The word was "+secret)
+# i = 0
+# while (i < 6):
+#     word = input()
+#     if len(word) != 5:
+#         print("Only 5-letter words are allowed.")
+#         continue
+#     if not isValid(word):  #
+#         print("Not in word list.")
+#         continue
+#     wordle(word)
+#     i += 1
+# else:
+#     print("The word was "+secret)
 
 
 # if __name__ == "__main__":
 #     main()
-
-
-
-

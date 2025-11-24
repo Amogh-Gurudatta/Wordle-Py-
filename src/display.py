@@ -1,8 +1,7 @@
 import pygame
-import sys
 from constants import *
 
-DISPLAY = pygame.display.set_mode((WIDTH, HEIGHT))
+DISPLAY = pygame.display.set_mode((WIDTH, HEIGHT), pygame.SCALED | pygame.RESIZABLE)
 
 try:
     BACKGROUND = pygame.image.load(os.path.join(ASSET_PATH, "Starting Tiles.png"))
@@ -15,6 +14,7 @@ except pygame.error as e:
 pygame.display.set_caption("Wordle!")
 pygame.display.set_icon(ICON)
 
+
 def init_screen():
     """Draws empty white board."""
     DISPLAY.fill(WHITE)
@@ -24,6 +24,7 @@ def init_screen():
 
 def init_indicators():
     from game_objects import Indicator
+
     indicators = []
     indicator_x, indicator_y = 20, 600
     for i in range(3):
@@ -63,16 +64,16 @@ def update_keyboard(indicators, key_colours):
 
 def draw_play_again(stats, SECRET):
     """Displays the end-game screen with stats and play-again prompt."""
-    pygame.draw.rect(DISPLAY, WHITE, (10, 600, 1000, 600))
 
-    play_again_text = PLAY_AGAIN_FONT.render("Press ENTER to Play Again!", True, BLACK)
-    play_again_rect = play_again_text.get_rect(center=(WIDTH / 2, 850))
+    pygame.draw.rect(DISPLAY, WHITE, (0, 600, WIDTH, 300))
+
+    # play_again_text = PLAY_AGAIN_FONT.render("Press ENTER to Play Again!", True, BLACK)
+    # play_again_rect = play_again_text.get_rect(center=(WIDTH / 2, 850))
 
     word_was_text = PLAY_AGAIN_FONT.render(f"The word was {SECRET}!", True, BLACK)
-    word_was_rect = word_was_text.get_rect(center=(WIDTH / 2, 800))
-
+    word_was_rect = word_was_text.get_rect(center=(WIDTH / 2, 630))
     DISPLAY.blit(word_was_text, word_was_rect)
-    DISPLAY.blit(play_again_text, play_again_rect)
+    # DISPLAY.blit(play_again_text, play_again_rect)
 
     # --- Display Statistics ---
     wins_text = STATS_FONT.render(f"Wins: {stats['wins']}", True, BLACK)
@@ -84,18 +85,30 @@ def draw_play_again(stats, SECRET):
         f"Max Streak: {stats['max_streak']}", True, BLACK
     )
 
-    DISPLAY.blit(wins_text, (WIDTH / 2 - 250, 650))
-    DISPLAY.blit(losses_text, (WIDTH / 2 - 250, 680))
-    DISPLAY.blit(curr_streak_text, (WIDTH / 2 + 50, 650))
-    DISPLAY.blit(max_streak_text, (WIDTH / 2 + 50, 680))
+    DISPLAY.blit(wins_text, (WIDTH / 2 - 250, 670))
+    DISPLAY.blit(losses_text, (WIDTH / 2 - 250, 700))
+    DISPLAY.blit(curr_streak_text, (WIDTH / 2 + 50, 670))
+    DISPLAY.blit(max_streak_text, (WIDTH / 2 + 50, 700))
 
     dist_title = STATS_FONT.render("Guess Distribution:", True, BLACK)
-    DISPLAY.blit(dist_title, (WIDTH / 2 - 100, 720))
+    dist_rect = dist_title.get_rect(center=(WIDTH / 2, 750))
+    DISPLAY.blit(dist_title, dist_rect)
+
+    total_width_estimate = 500
+    start_x = (WIDTH - total_width_estimate) / 2
+    spacing = 85
+
     for i in range(1, 7):
+        # Render string like "1: 0" or "2: 5"
         dist_text = STATS_FONT.render(
             f"{i}: {stats['guess_distribution'][str(i)]}", True, GREY
         )
-        DISPLAY.blit(dist_text, (WIDTH / 2 - 10, 720 + i * 20))
+        # Place them side by side
+        DISPLAY.blit(dist_text, (start_x + (i - 1) * spacing, 780))
+
+    play_again_text = PLAY_AGAIN_FONT.render("Press ENTER to Play Again!", True, BLACK)
+    play_again_rect = play_again_text.get_rect(center=(WIDTH / 2, 840))
+    DISPLAY.blit(play_again_text, play_again_rect)
 
     pygame.display.update()
 

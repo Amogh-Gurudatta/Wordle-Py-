@@ -1,6 +1,5 @@
 import pygame
 import os
-import random
 
 pygame.init()
 pygame.font.init()
@@ -8,7 +7,8 @@ pygame.font.init()
 # File Paths
 ASSET_PATH = "assets"
 DATA_PATH = "data"
-WORDS_FILE = os.path.join(DATA_PATH, "words.txt")
+GUESSABLE_WORDS_FILE = os.path.join(DATA_PATH, "guessable_words.txt")
+CHOOSABLE_WORDS_FILE = os.path.join(DATA_PATH, "choosable_words.txt")
 STATS_FILE = os.path.join(DATA_PATH, "stats.json")
 
 # Dimensions
@@ -79,5 +79,5 @@ VALID_KEYS = "QWERTYUIOPASDFGHJKLZXCVBNM"
 #     except Exception as e:
 #         print(f"Error loading words: {e}")
 #         exit()
-        
+
 # WORDS, SECRET = get_word()

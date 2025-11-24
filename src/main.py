@@ -1,10 +1,17 @@
+import ctypes
 import pygame
 import sys
-import random
 from constants import *
 from game_objects import Letter
 import logic
 import display
+
+try:
+    import ctypes
+
+    ctypes.windll.user32.SetProcessDPIAware()
+except AttributeError:
+    pass
 
 guess_count = 0
 guesses = [[] for _ in range(6)]
@@ -13,11 +20,12 @@ current_guess_str = ""
 current_alphabet_bg_x = 110
 game_result = ""
 
+clock = pygame.time.Clock()
 stats = logic.load_stats()
 display.init_screen()
 indicators = display.init_indicators()
 
-WORDS, SECRET = logic.get_word()
+GUESSABLE_WORDS, SECRET = logic.get_guessable_words()
 
 
 def add_letter_to_guess(key_pressed):
@@ -38,6 +46,7 @@ def add_letter_to_guess(key_pressed):
         #         letter.draw()
         new_letter.draw()
 
+
 def remove_letter_from_guess():
     """Deletes the last letter from the current guess"""
     global current_guess_str, current_alphabet_bg_x
@@ -49,11 +58,17 @@ def remove_letter_from_guess():
         current_alphabet_bg_x -= ALPHABET_X_DISTANCE
         letter.delete()
 
+
 def evaluate_guess():
     """Checks the guess and updates screen if valid"""
     global guess_count, game_result, stats, current_alphabet_bg_x, current_guess_str, current_guess
 
-    if len(current_guess_str) != 5 or current_guess_str not in WORDS:
+    if len(current_guess_str) != 5:
+        print("Word must be 5 letters long!")  # Debug feedback
+        return
+
+    if current_guess_str not in GUESSABLE_WORDS:
+        print(f"'{current_guess_str}' is not in the word list!")  # Debug feedback
         return
 
     tile_colours, key_colours = logic.check_guess(current_guess_str, SECRET)
@@ -78,7 +93,7 @@ def evaluate_guess():
 
 def reset():
     """Resets the game."""
-    global guess_count, guesses, current_guess, current_guess_str, current_alphabet_bg_x, game_result, SECRET, WORDS
+    global guess_count, guesses, current_guess, current_guess_str, current_alphabet_bg_x, game_result, SECRET
 
     guess_count = 0
     guesses = [[] for _ in range(6)]
@@ -87,8 +102,9 @@ def reset():
     current_alphabet_bg_x = 110
     game_result = ""
 
-    _, SECRET = logic.get_word()
+    _, SECRET = logic.get_random_word()
     display.reset_display(indicators)
+
 
 while True:
     if game_result != "":
@@ -109,8 +125,11 @@ while True:
             elif event.key == pygame.K_BACKSPACE:
                 if game_result == "":
                     remove_letter_from_guess()
-                    
+
             elif game_result == "":
                 key_pressed = event.unicode.upper()
-                if key_pressed in VALID_KEYS:
+                if key_pressed in VALID_KEYS and key_pressed != "":
                     add_letter_to_guess(key_pressed)
+
+    pygame.display.update()
+    clock.tick(60)
